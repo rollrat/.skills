@@ -36,14 +36,20 @@ Chrome이 디버그 모드로 실행 중인지 확인해주세요.
 ### 문서 생성 규칙
 - **글마다 개별 문서를 만들지 않는다**
 - **모든 글을 하나의 총 요약 문서로 합쳐서 생성한다**
-- 파일명은 **날짜+시간** 형식: `reddit/{subreddit}/{YYYY-MM-DD_HHmm}.md`
-  - 예: `reddit/SaaS/2026-02-14_1530.md`
+- 파일명은 **날짜+시간** 형식: `reddit/{YYYY-MM-DD_HHmm}/{subreddit}.md`
+  - 예: `reddit/2026-02-14_1530/SaaS.md`
 
 ## Workflow
 
+### 0. 현재 시간 확인 (필수)
+
+**가장 먼저 Bash로 `date "+%Y-%m-%d_%H%M"` 명령을 실행하여 실제 현재 시간을 확인한다.**
+이 값을 파일 저장 경로의 `{YYYY-MM-DD_HHmm}` 부분에 사용한다.
+절대로 시간을 추측하거나 임의로 넣지 않는다.
+
 ### 1. Chrome DevTools MCP 연결 확인
 
-**가장 먼저 `list_pages`를 호출하여 Chrome MCP 연결 상태를 확인한다.**
+**`list_pages`를 호출하여 Chrome MCP 연결 상태를 확인한다.**
 - 실패 시: 에러 출력 후 즉시 중단
 - 성공 시: 다음 단계 진행
 
@@ -82,7 +88,7 @@ Reddit JSON API를 Chrome DevTools MCP를 통해 접근:
 
 Obsidian 볼트 경로: `C:\Users\rollrat\Documents\Obsidian Vault`
 
-파일 경로: `reddit/{subreddit}/{YYYY-MM-DD_HHmm}.md`
+파일 경로: `reddit/{YYYY-MM-DD_HHmm}/{subreddit}.md`
 
 #### 마크다운 템플릿
 
@@ -193,7 +199,7 @@ Claude가 이 skill을 실행할 때:
    - 댓글 간 논쟁 구조 보존
    - 커뮤니티 전체 트렌드 메타 분석
 4. **게시물 정렬**: 점수(score) 높은 순서대로 정렬하여 문서 작성.
-5. **Obsidian에 저장**: Obsidian MCP의 `write_note` 도구를 사용하여 볼트에 저장. 파일명에 날짜+시간 포함.
+5. **Obsidian에 저장**: Obsidian MCP의 `write_note` 도구를 사용하여 볼트에 저장. **파일명의 날짜+시간은 반드시 Bash `date "+%Y-%m-%d_%H%M"` 명령으로 실제 현재 시간을 확인한 후 사용한다.** 추측이나 임의 시간을 넣지 않는다.
 
 ### Reddit JSON API 활용
 
