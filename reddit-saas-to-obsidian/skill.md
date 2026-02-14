@@ -201,10 +201,13 @@ tags:
   buildinpublic — 공개 빌딩 과정, 진행 상황 공유
   IMadeThis     — 직접 만든 프로젝트 쇼케이스
   selfhosted    — 셀프호스팅, SaaS 대안 비교
+  logistics     — 물류 업계 소프트웨어, 운송, 3PL, TMS
+  supplychain   — 공급망 관리, 디맨드 플래닝, ERP, 재고
 
 사용법:
   /reddit-saas-to-obsidian SaaS              — r/SaaS 인기글 10개 수집
   /reddit-saas-to-obsidian microsaas --top 5 — r/microsaas 5개 수집
+  /reddit-saas-to-obsidian logistics         — r/logistics 인기글 10개 수집
   /reddit-saas-to-obsidian SaaS --sort new   — 최신글 기준 수집
   /reddit-saas-to-obsidian <Reddit URL>      — 특정 게시물 하나 수집
 ```
