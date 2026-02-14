@@ -186,10 +186,36 @@ tags:
 /reddit-to-obsidian microsaas --top 15 --sort new
 ```
 
+## 인자 없이 실행 시 동작 (기본 채널 안내)
+
+**`/reddit-to-obsidian`을 인자 없이 실행하면 수집하지 않고, 아래 기본 서브레딧 목록을 출력한다.**
+
+출력 형식 (정확히 이대로 출력):
+
+```
+📡 Reddit 수집 가능한 기본 채널:
+
+  SaaS          — SaaS 전반 (런칭, MRR 공유, 전략)
+  microsaas     — 1인/소규모 SaaS, 사이드프로젝트 수익화
+  indiehackers  — 인디 개발자, 온라인 비즈니스 전반
+  buildinpublic — 공개 빌딩 과정, 진행 상황 공유
+  IMadeThis     — 직접 만든 프로젝트 쇼케이스
+  selfhosted    — 셀프호스팅, SaaS 대안 비교
+
+사용법:
+  /reddit-to-obsidian SaaS              — r/SaaS 인기글 10개 수집
+  /reddit-to-obsidian microsaas --top 5 — r/microsaas 5개 수집
+  /reddit-to-obsidian SaaS --sort new   — 최신글 기준 수집
+  /reddit-to-obsidian <Reddit URL>      — 특정 게시물 하나 수집
+```
+
+**이 안내만 출력하고 종료한다. Chrome MCP 연결, 데이터 수집 등 어떤 동작도 하지 않는다.**
+
 ## Implementation Notes
 
 Claude가 이 skill을 실행할 때:
 
+0. **인자 확인**: 인자가 없으면 위의 "기본 채널 안내"를 출력하고 즉시 종료. 이하 단계를 실행하지 않는다.
 1. **Chrome DevTools MCP 연결 확인**: `list_pages` 호출. 실패 시 에러 출력 후 중단.
 2. **Chrome DevTools MCP로 Reddit JSON API 접근**: `navigate_page`로 JSON URL 이동, `evaluate_script`로 데이터 추출.
 3. **비판적 분석 요약 생성**: 추출된 데이터를 분석하여 한국어로 요약. 단순 정리가 아닌 **비판적 시각** 포함:
