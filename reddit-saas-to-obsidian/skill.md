@@ -1,18 +1,18 @@
 ---
-name: reddit-to-obsidian
-description: Reddit SaaS 게시판 글을 Chrome DevTools MCP로 읽고, 요약해서 Obsidian 볼트에 저장합니다. /reddit-to-obsidian <url_or_subreddit> 로 실행.
+name: reddit-saas-to-obsidian
+description: Reddit SaaS 게시판 글을 Chrome DevTools MCP로 읽고, 요약해서 Obsidian 볼트에 저장합니다. /reddit-saas-to-obsidian <url_or_subreddit> 로 실행.
 ---
 
 # Reddit to Obsidian - SaaS 게시물 수집 & 요약
 
 ## Overview
 
-Chrome DevTools MCP를 사용하여 Reddit SaaS 관련 게시글과 댓글을 읽고, **하나의 총 요약 문서**로 만들어 Obsidian 볼트의 `reddit/` 폴더에 저장합니다.
+Chrome DevTools MCP를 사용하여 Reddit SaaS 관련 게시글과 댓글을 읽고, **하나의 총 요약 문서**로 만들어 Obsidian 볼트의 `reddit-saas/` 폴더에 저장합니다.
 
 ## Usage
 
 ```
-/reddit-to-obsidian <reddit_url_or_subreddit> [options]
+/reddit-saas-to-obsidian <reddit_url_or_subreddit> [options]
 ```
 
 ### Options
@@ -20,7 +20,7 @@ Chrome DevTools MCP를 사용하여 Reddit SaaS 관련 게시글과 댓글을 �
 - `<subreddit>`: 서브레딧 이름 (예: SaaS, microsaas) - 상위 인기글 수집
 - `--top <n>`: 수집할 게시물 수 (기본: 10)
 - `--sort <type>`: 정렬 방식 - hot, new, top (기본: hot)
-- `--folder <name>`: Obsidian 저장 폴더 (기본: reddit)
+- `--folder <name>`: Obsidian 저장 폴더 (기본: reddit-saas)
 
 ## Critical Rules
 
@@ -36,8 +36,8 @@ Chrome이 디버그 모드로 실행 중인지 확인해주세요.
 ### 문서 생성 규칙
 - **글마다 개별 문서를 만들지 않는다**
 - **모든 글을 하나의 총 요약 문서로 합쳐서 생성한다**
-- 파일명은 **날짜+시간** 형식: `reddit/{YYYY-MM-DD_HHmm}/{subreddit}.md`
-  - 예: `reddit/2026-02-14_1530/SaaS.md`
+- 파일명은 **날짜+시간** 형식: `reddit-saas/{YYYY-MM-DD_HHmm}/{subreddit}.md`
+  - 예: `reddit-saas/2026-02-14_1530/SaaS.md`
 
 ## Workflow
 
@@ -88,7 +88,7 @@ Reddit JSON API를 Chrome DevTools MCP를 통해 접근:
 
 Obsidian 볼트 경로: `C:\Users\rollrat\Documents\Obsidian Vault`
 
-파일 경로: `reddit/{YYYY-MM-DD_HHmm}/{subreddit}.md`
+파일 경로: `reddit-saas/{YYYY-MM-DD_HHmm}/{subreddit}.md`
 
 #### 마크다운 템플릿
 
@@ -177,18 +177,18 @@ tags:
 
 ```bash
 # 특정 게시물 하나 요약
-/reddit-to-obsidian https://www.reddit.com/r/SaaS/comments/abc123/my_saas_hit_10k_mrr/
+/reddit-saas-to-obsidian https://www.reddit.com/r/SaaS/comments/abc123/my_saas_hit_10k_mrr/
 
 # r/SaaS 인기글 10개 수집 (기본)
-/reddit-to-obsidian SaaS
+/reddit-saas-to-obsidian SaaS
 
 # r/microsaas 최신글 15개 수집
-/reddit-to-obsidian microsaas --top 15 --sort new
+/reddit-saas-to-obsidian microsaas --top 15 --sort new
 ```
 
 ## 인자 없이 실행 시 동작 (기본 채널 안내)
 
-**`/reddit-to-obsidian`을 인자 없이 실행하면 수집하지 않고, 아래 기본 서브레딧 목록을 출력한다.**
+**`/reddit-saas-to-obsidian`을 인자 없이 실행하면 수집하지 않고, 아래 기본 서브레딧 목록을 출력한다.**
 
 출력 형식 (정확히 이대로 출력):
 
@@ -203,10 +203,10 @@ tags:
   selfhosted    — 셀프호스팅, SaaS 대안 비교
 
 사용법:
-  /reddit-to-obsidian SaaS              — r/SaaS 인기글 10개 수집
-  /reddit-to-obsidian microsaas --top 5 — r/microsaas 5개 수집
-  /reddit-to-obsidian SaaS --sort new   — 최신글 기준 수집
-  /reddit-to-obsidian <Reddit URL>      — 특정 게시물 하나 수집
+  /reddit-saas-to-obsidian SaaS              — r/SaaS 인기글 10개 수집
+  /reddit-saas-to-obsidian microsaas --top 5 — r/microsaas 5개 수집
+  /reddit-saas-to-obsidian SaaS --sort new   — 최신글 기준 수집
+  /reddit-saas-to-obsidian <Reddit URL>      — 특정 게시물 하나 수집
 ```
 
 **이 안내만 출력하고 종료한다. Chrome MCP 연결, 데이터 수집 등 어떤 동작도 하지 않는다.**
