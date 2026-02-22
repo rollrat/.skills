@@ -18,7 +18,7 @@ description: 직전 세션의 실행 흐름을 분석하여 병목, 중복 호�
 ## Usage
 
 ```
-/session-retrospective
+/skill-optimizer
 ```
 
 인자 없음. 현재 대화 기록 전체를 분석 대상으로 한다.
@@ -54,6 +54,7 @@ description: 직전 세션의 실행 흐름을 분석하여 병목, 중복 호�
 | **불필요한 block 대기** | background agent인데 어차피 결과를 기다림 | run_in_background=true 후 즉시 TaskOutput block=true |
 | **인코딩/경로 오류** | Windows 환경 특유의 cp949·경로 문제로 재시도 | /c/Users/... vs C:/Users/... |
 | **과도한 중간 파일** | tmp 파일이 여러 단계에 걸쳐 생성되고 순차 전달됨 | script → file → read → agent → file → read |
+| **skill.md 인라인 코드 과다** | skill.md에 실행 가능한 코드 블록이 대량 포함됨 | 50줄 이상 Python이 skill.md에 인라인으로 존재 |
 
 ## Workflow
 
@@ -139,6 +140,57 @@ After:
 - 이유: ...
 
 **수정 2**: ...
+```
+
+### 5. 스킬 구조 최적화 제안 (해당 시)
+
+세션에서 사용된 스킬의 skill.md에 실행 가능한 코드 블록이 대량 포함된 경우, 스크립트 분리를 제안한다.
+
+**탐지 기준**: skill.md 내 코드 블록 합계가 50줄 이상이거나, 동일 스크립트가 세션마다 반복 출력됨.
+
+**왜 문제인가:**
+- skill.md는 스킬이 로드될 때마다 컨텍스트에 전부 올라온다.
+- 인라인 코드가 많을수록 매 세션 시작 시 토큰 낭비가 발생한다.
+- 코드 수정 시 skill.md 안에서 찾아야 하므로 유지보수도 불편하다.
+
+**개선 방향: 스크립트를 별도 파일로 분리**
+
+```
+Before (skill.md 인라인):
+  ~/.claude/skills/my-skill/
+    skill.md   ← Python 100줄 포함
+
+After (분리):
+  ~/.claude/skills/my-skill/
+    skill.md          ← 경로 참조 한 줄만
+    scripts/
+      download.py     ← yt-dlp 호출 + 자막 파싱
+      parse.py        ← 텍스트 변환
+```
+
+skill.md에는 아래처럼만 남긴다:
+```markdown
+### 2. 메타데이터 + 자막 다운로드
+
+아래 스크립트를 실행한다:
+\```bash
+python ~/.claude/skills/my-skill/scripts/download.py {vid} {lang} {tmp_dir}
+\```
+stdout: meta JSON / 자막 json3 → tmp_dir 저장
+```
+
+**트레이드오프 명시**: 스크립트 분리 시 디버깅이 필요한 경우 Claude가 Read로 파일을 별도 로드해야 하므로, 자주 수정되는 스크립트라면 인라인 유지가 나을 수 있다. 안정적으로 동작하는 스크립트에만 분리를 권장한다.
+
+출력 형식:
+```
+### 스킬 구조 최적화 제안: {skill-name}
+
+현재 skill.md 코드 블록: 약 N줄
+분리 권장 대상:
+  - scripts/download.py  (현재 Workflow 2~3 섹션, 약 N줄)
+  - scripts/parse.py     (현재 Workflow 4 섹션, 약 N줄)
+
+분리 후 skill.md 절약: 약 N줄 → 토큰 N개
 ```
 
 ## 인자 없이 실행 시 동작
