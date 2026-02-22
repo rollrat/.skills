@@ -93,9 +93,17 @@ LANGUAGE = 'ko'
 print(f'입력: {audio_path}')
 print(f'출력: {output_path}')
 
-# 1단계: 모델 로드
-print('1단계: Whisper 모델 로드...')
-model = whisperx.load_model('large-v3', DEVICE, compute_type=COMPUTE_TYPE, language=LANGUAGE)
+# 1단계: 모델 로드 (VAD 임계값 완화 - 속삭임/짧은 발화 감지)
+print('1단계: Whisper 모델 로드 (vad_onset=0.2)...')
+model = whisperx.load_model(
+    'large-v3', DEVICE,
+    compute_type=COMPUTE_TYPE,
+    language=LANGUAGE,
+    vad_options={
+        "vad_onset": 0.2,   # 기본 0.5 → 낮출수록 조용한 소리도 감지
+        "vad_offset": 0.2,  # 기본 0.363
+    }
+)
 
 # 2단계: 전사
 print('2단계: 오디오 로드 및 전사...')
@@ -170,6 +178,7 @@ python /tmp/whisperx_runner.py "<오디오경로>" "<출력경로>"
   - 모델: large-v3 (GPU 필수)
   - 언어: 한국어 (ko)
   - 타임스탬프: 세그먼트 단위
+  - VAD: vad_onset=0.2, vad_offset=0.2 (속삭임/짧은 발화 감지 강화)
 ```
 
 ## Error Handling
